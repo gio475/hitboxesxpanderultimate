@@ -1,0 +1,38 @@
+-- Librería de UI ultra ligera
+local Library = loadstring(game:HttpGet("https://raw.githubusercontent.com/xHeptc/Kavo-UI-Library/main/source.lua"))()
+local Window = Library.CreateLib("Hitbox Mini-Menu", "DarkTheme")
+
+-- Pestaña Principal
+local Main = Window:NewTab("Hitbox")
+local Section = Main:NewSection("Expander Settings")
+
+-- Función para cambiar el tamaño de la Hitbox
+local function ExpandHitbox(size)
+    for _, v in pairs(game:GetService("Players"):GetPlayers()) do
+        if v.Name ~= game:GetService("Players").LocalPlayer.Name then
+            pcall(function()
+                v.Character.HumanoidRootPart.Size = Vector3.new(size, size, size)
+                v.Character.HumanoidRootPart.Transparency = 0.7 -- Para que veas el cambio
+                v.Character.HumanoidRootPart.BrickColor = BrickColor.new("Really blue")
+                v.Character.HumanoidRootPart.CanCollide = false
+            end)
+        end
+    end
+end
+
+-- Botones parecidos a tu imagen
+Section:NewButton("Slight Expansion (5)", "Aumenta un poco", function()
+    ExpandHitbox(5)
+end)
+
+Section:NewButton("Mesomorphic Extension (10)", "Aumento medio", function()
+    ExpandHitbox(10)
+end)
+
+Section:NewButton("Large Expansion (20)", "Aumento grande", function()
+    ExpandHitbox(20)
+end)
+
+Section:NewButton("Reset Hitbox", "Vuelve a la normalidad", function()
+    ExpandHitbox(2) -- Tamaño estándar aproximado
+end)
