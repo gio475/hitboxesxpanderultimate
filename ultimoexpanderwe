@@ -1,0 +1,73 @@
+-- MINI MENU ULTIMATE REACH (CFrame Logic)
+local ScreenGui = Instance.new("ScreenGui")
+local MainFrame = Instance.new("Frame")
+local UIListLayout = Instance.new("UIListLayout")
+
+ScreenGui.Parent = game.CoreGui
+MainFrame.Parent = ScreenGui
+MainFrame.Position = UDim2.new(0.05, 0, 0.3, 0)
+MainFrame.Size = UDim2.new(0, 250, 0, 200)
+MainFrame.BackgroundTransparency = 1
+
+UIListLayout.Parent = MainFrame
+UIListLayout.Padding = UDim.new(0, 8)
+
+_G.ReachDist = 2 -- Distancia inicial
+
+-- LÓGICA DE GOLPE REAL (CFrame)
+game:GetService("RunService").Stepped:Connect(function()
+    pcall(function()
+        local lp = game.Players.LocalPlayer
+        for _, v in pairs(game.Players:GetPlayers()) do
+            if v ~= lp and v.Character and v.Character:FindFirstChild("HumanoidRootPart") then
+                local hrp = v.Character.HumanoidRootPart
+                -- Si el enemigo está dentro del rango que elegiste en el menú...
+                local dist = (lp.Character.HumanoidRootPart.Position - hrp.Position).Magnitude
+                if dist <= _G.ReachDist then
+                    -- Esto "extiende" la detección de colisión del golpe
+                    hrp.Size = Vector3.new(_G.ReachDist, _G.ReachDist, _G.ReachDist)
+                    hrp.Transparency = 1
+                    hrp.CanCollide = false
+                else
+                    hrp.Size = Vector3.new(2, 2, 1) -- Tamaño original si está lejos
+                end
+            end
+        end
+    end)
+end)
+
+-- Función del Menú (Igual a tu imagen)
+local function CreateButton(text, val)
+    local btn = Instance.new("TextButton")
+    local corner = Instance.new("UICorner")
+    local icon = Instance.new("ImageLabel")
+
+    btn.Parent = MainFrame
+    btn.Size = UDim2.new(1, 0, 0, 45)
+    btn.BackgroundColor3 = Color3.fromRGB(200, 200, 200)
+    btn.Text = "  " .. text
+    btn.TextColor3 = Color3.fromRGB(0, 0, 0)
+    btn.TextSize = 17
+    btn.Font = Enum.Font.SourceSansSemibold
+    btn.TextXAlignment = Enum.TextXAlignment.Left
+
+    corner.CornerRadius = UDim.new(0, 8)
+    corner.Parent = btn
+
+    icon.Parent = btn
+    icon.Position = UDim2.new(1, -32, 0.5, -11)
+    icon.Size = UDim2.new(0, 22, 0, 22)
+    icon.Image = "rbxassetid://6031094678"
+    icon.BackgroundTransparency = 1
+    icon.ImageColor3 = Color3.fromRGB(80, 80, 80)
+
+    btn.MouseButton1Click:Connect(function()
+        _G.ReachDist = val
+    end)
+end
+
+-- Botones de la imagen
+CreateButton("Slight expansion(5)", 15) -- Subí los valores internos para que se note
+CreateButton("Mesomorphic extension(10)", 25)
+CreateButton("Large expansion(20)", 45)
+CreateButton("Reset", 2)
