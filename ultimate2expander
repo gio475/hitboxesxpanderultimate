@@ -1,0 +1,70 @@
+-- MINI MENU SILENT REACH - ULTIMATE BATTLEGROUNDS
+local ScreenGui = Instance.new("ScreenGui")
+local MainFrame = Instance.new("Frame")
+local UIListLayout = Instance.new("UIListLayout")
+
+ScreenGui.Parent = game.CoreGui
+MainFrame.Parent = ScreenGui
+MainFrame.Position = UDim2.new(0.05, 0, 0.3, 0) -- Posición lateral
+MainFrame.Size = UDim2.new(0, 250, 0, 200)
+MainFrame.BackgroundTransparency = 1
+
+UIListLayout.Parent = MainFrame
+UIListLayout.Padding = UDim.new(0, 8)
+
+-- Lógica de "Golpe Invisible" (Silent Reach)
+_G.ReachSize = 2 -- Tamaño normal por defecto
+
+game:GetService('RunService').RenderStepped:Connect(function()
+    for _, v in pairs(game:GetService('Players'):GetPlayers()) do
+        if v.Name ~= game:GetService('Players').LocalPlayer.Name and v.Character and v.Character:FindFirstChild("HumanoidRootPart") then
+            local hrp = v.Character.HumanoidRootPart
+            -- Expandimos la zona de golpe pero la hacemos invisible
+            hrp.Size = Vector3.new(_G.ReachSize, _G.ReachSize, _G.ReachSize)
+            hrp.Transparency = 1 -- <--- AQUÍ: 1 significa TOTALMENTE INVISIBLE
+            hrp.CanCollide = false -- Para que no choques con el aire
+            
+            -- Esto evita que el personaje "brille" o se vea raro por el script
+            if hrp:FindFirstChild("SelectionBox") then
+                hrp.SelectionBox:Destroy()
+            end
+        end
+    end
+end)
+
+-- Función para crear los botones grises de la imagen
+local function CreateMenuButton(text, dist)
+    local btn = Instance.new("TextButton")
+    local corner = Instance.new("UICorner")
+    local icon = Instance.new("ImageLabel")
+
+    btn.Parent = MainFrame
+    btn.Size = UDim2.new(1, 0, 0, 45)
+    btn.BackgroundColor3 = Color3.fromRGB(200, 200, 200) -- Gris claro como tu imagen
+    btn.Text = "  " .. text
+    btn.TextColor3 = Color3.fromRGB(0, 0, 0)
+    btn.TextSize = 17
+    btn.Font = Enum.Font.SourceSansSemibold
+    btn.TextXAlignment = Enum.TextXAlignment.Left
+
+    corner.CornerRadius = UDim.new(0, 8)
+    corner.Parent = btn
+
+    icon.Parent = btn
+    icon.Position = UDim2.new(1, -32, 0.5, -11)
+    icon.Size = UDim2.new(0, 22, 0, 22)
+    icon.Image = "rbxassetid://6031094678" -- Icono del cursor
+    icon.BackgroundTransparency = 1
+    icon.ImageColor3 = Color3.fromRGB(80, 80, 80)
+
+    btn.MouseButton1Click:Connect(function()
+        _G.ReachSize = dist
+        print("Distancia ajustada a: " .. dist)
+    end)
+end
+
+-- Botones exactos de tu imagen que ahora controlan la distancia invisible
+CreateMenuButton("Slight expansion(5)", 5)
+CreateMenuButton("Mesomorphic extension(10)", 10)
+CreateMenuButton("Large expansion(20)", 20)
+CreateMenuButton("Reset to Normal", 2)
