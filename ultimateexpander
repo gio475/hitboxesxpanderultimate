@@ -1,0 +1,66 @@
+-- MINI MENU HITBOX - ULTIMATE BATTLEGROUNDS
+local ScreenGui = Instance.new("ScreenGui")
+local Frame = Instance.new("Frame")
+local UIListLayout = Instance.new("UIListLayout")
+
+-- Configuración del Menú Principal
+ScreenGui.Parent = game.CoreGui
+ScreenGui.Name = "HitboxMiniMenu"
+
+Frame.Parent = ScreenGui
+Frame.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+Frame.BackgroundTransparency = 1
+Frame.Position = UDim2.new(0.05, 0, 0.4, 0) -- Aparece a la izquierda
+Frame.Size = UDim2.new(0, 250, 0, 150)
+
+UIListLayout.Parent = Frame
+UIListLayout.SortOrder = Enum.SortOrder.LayoutOrder
+UIListLayout.Padding = UDim.new(0, 8) -- Espacio entre botones
+
+-- Función para crear botones idénticos a tu imagen
+local function CreateButton(text, sizeValue)
+    local btn = Instance.new("TextButton")
+    local UICorner = Instance.new("UICorner")
+    local Icon = Instance.new("ImageLabel")
+
+    btn.Name = text
+    btn.Parent = Frame
+    btn.BackgroundColor3 = Color3.fromRGB(200, 200, 200) -- Gris claro
+    btn.Size = UDim2.new(1, 0, 0, 45)
+    btn.Font = Enum.Font.SourceSansSemibold
+    btn.Text = "  " .. text
+    btn.TextColor3 = Color3.fromRGB(0, 0, 0)
+    btn.TextSize = 18
+    btn.TextXAlignment = Enum.TextXAlignment.Left
+
+    UICorner.CornerRadius = UDim.new(0, 8)
+    UICorner.Parent = btn
+
+    -- Icono del cursor a la derecha
+    Icon.Parent = btn
+    Icon.BackgroundTransparency = 1
+    Icon.Position = UDim2.new(1, -35, 0.5, -12)
+    Icon.Size = UDim2.new(0, 24, 0, 24)
+    Icon.Image = "rbxassetid://6031094678" -- Icono de cursor/click
+    Icon.ImageColor3 = Color3.fromRGB(100, 100, 100)
+
+    -- Lógica de expansión
+    btn.MouseButton1Click:Connect(function()
+        for _, v in pairs(game:GetService("Players"):GetPlayers()) do
+            if v.Name ~= game.Players.LocalPlayer.Name and v.Character and v.Character:FindFirstChild("HumanoidRootPart") then
+                local hrp = v.Character.HumanoidRootPart
+                hrp.Size = Vector3.new(sizeValue, sizeValue, sizeValue)
+                hrp.Transparency = 0.8
+                hrp.CanCollide = false
+            end
+        end
+    end)
+end
+
+-- Crear los botones exactos de tu foto
+CreateButton("Slight expansion(5)", 5)
+CreateButton("Mesomorphic extension(10)", 10)
+CreateButton("Large expansion(20)", 20)
+
+-- Botón extra para resetear (por si te ven los admins)
+CreateButton("Reset Hitbox(Normal)", 2)
